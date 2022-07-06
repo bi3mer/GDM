@@ -16,7 +16,6 @@ def __build_grid_world(MAX_X, MAX_Y):
             # create node and its reward
             src = f'{y}_{x}'
             g.add_node(src)
-            g.nodes[src][P] = 1
             if x == MAX_X - 1 and y == MAX_Y - 1:
                 g.nodes[src][R] = 1
                 g.nodes[src][T] = True
@@ -29,19 +28,27 @@ def __build_grid_world(MAX_X, MAX_Y):
 
             # create left connection
             if x - 1 >= 0 and not (x - 1 == 1 and y == 1):
-                g.add_edge(src, f'{y}_{x-1}')
+                tgt = f'{y}_{x-1}'
+                g.add_edge(src, tgt)
+                g.edges[(src, tgt)][P] = 1.0
 
             # create right connection
             if x + 1 < MAX_X and not (x + 1 == 1 and y == 1):
-                g.add_edge(src, f'{y}_{x+1}')
+                tgt = f'{y}_{x+1}'
+                g.add_edge(src, tgt)
+                g.edges[(src, tgt)][P] = 1.0
 
             # create up connection
             if y - 1 >= 0  and not (x == 1 and y - 1 == 1):
-                g.add_edge(src, f'{y-1}_{x}')
+                tgt = f'{y-1}_{x}'
+                g.add_edge(src, tgt)
+                g.edges[(src, tgt)][P] = 1.0
 
             # create down connection
             if y + 1 < MAX_Y and not (x == 1 and y + 1 == 1):
-                g.add_edge(src, f'{y+1}_{x}')
+                tgt = f'{y+1}_{x}'
+                g.add_edge(src, tgt)
+                g.edges[(src, tgt)][P] = 1.0
 
     return '0_0', g
 
