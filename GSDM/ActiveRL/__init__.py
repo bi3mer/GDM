@@ -1,3 +1,3 @@
-from DirectUtilityEstimation import direct_utility_estimation, initialize_for_direct_utility_estimation
+from . import DUE
 from .QLearning import q_learning
 from .SARSA import sarsa

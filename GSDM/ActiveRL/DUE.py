@@ -1,6 +1,5 @@
-from ctypes import util
-from GSDM.utility import create_policy
-from Keys import U, VC, SUM
+from ..utility import create_policy_from_utility
+from ..Keys import U, VC, SUM
 
 def initialize_for_direct_utility_estimation(G):
     for n in G.nodes:
@@ -18,4 +17,4 @@ def direct_utility_estimation(G, gamma, states, rewards):
         node[VC] += 1
         node[U] = node[SUM] / node[VC]
 
-    return create_policy(G)
+    return create_policy_from_utility(G)

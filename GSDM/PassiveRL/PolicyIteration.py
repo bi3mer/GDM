@@ -1,8 +1,8 @@
 from networkx import set_node_attributes
 from math import inf
 
-from .utility import create_random_policy, reset_utility
-from .Keys import U, R, P
+from ..utility import create_random_policy, reset_utility
+from ..Keys import U, R, P
 
 ######################## Policy Evaluation ########################
 def __modified_in_place_policy_evaluation(G, pi, gamma, policy_k):
@@ -60,13 +60,13 @@ def __policy_improvement(G, pi):
     return changed
 
 ######################## Policy Iteration ########################
-def policy_iteration(G, gamma, modified=True, in_place=True, policy_k=10, should_reset_utility=True):
+def policy_iteration(G, gamma, modified=False, in_place=False, policy_k=10, should_reset_utility=True):
     # reset utility
     if should_reset_utility:
-        reset_utility() 
+        reset_utility(G) 
 
     # make random policy
-    pi = create_random_policy()
+    pi = create_random_policy(G)
 
     # get the policy eval based on input arguments
     if modified and in_place:
