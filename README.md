@@ -4,7 +4,7 @@ The goal of this library is to provide out of the box active and passive reinfor
 
 ## Examples and Tests
 
-Each file in [tests](./tests) builds a sample game and runs every algorithm in the library.
+Each file in [tests](./tests) builds a sample game and runs every algorithm in the library. To test, run `pytest`.
 
 ### Grid World
 
