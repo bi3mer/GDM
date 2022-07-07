@@ -1,7 +1,7 @@
-from GSDM.ActiveRL import DUE
-from GSDM import PassiveRL
-from GSDM.Keys import *
-import GSDM
+from GDM.ActiveRL import DUE
+from GDM import PassiveRL
+from GDM.Keys import *
+import GDM
 from networkx import DiGraph
 
 def __build_grid_world(MAX_X, MAX_Y):
@@ -56,7 +56,7 @@ def test_policy_iteration():
     start, G = __build_grid_world(5, 5)
     pi = PassiveRL.policy_iteration(G, 0.6)
     assert pi != None
-    states, rewards = GSDM.run_policy(G, pi, start, 20)
+    states, rewards = GDM.run_policy(G, pi, start, 20)
     assert len(states) == 9
     assert len(rewards) == 9
     assert rewards[-1] == 1
@@ -66,7 +66,7 @@ def test_in_place_policy_iteration():
     start, G = __build_grid_world(20, 20)
     pi = PassiveRL.policy_iteration(G, 0.5, in_place=True)
     assert pi != None
-    states, rewards = GSDM.run_policy(G, pi, start, 100)
+    states, rewards = GDM.run_policy(G, pi, start, 100)
     assert len(states) == 39
     assert len(rewards) == 39
     assert rewards[-1] == 1
@@ -76,7 +76,7 @@ def test_modified_policy_iteration():
     start, G = __build_grid_world(30, 30)
     pi = PassiveRL.policy_iteration(G, 0.7, modified=True)
     assert pi != None
-    states, rewards = GSDM.run_policy(G, pi, start, 100)
+    states, rewards = GDM.run_policy(G, pi, start, 100)
     assert len(states) == 59
     assert len(rewards) == 59
     assert rewards[-1] == 1
@@ -86,7 +86,7 @@ def test_modified_in_place_policy_iteration():
     start, G = __build_grid_world(50, 50)
     pi = PassiveRL.policy_iteration(G, 0.9, modified=True, in_place=True)
     assert pi != None
-    states, rewards = GSDM.run_policy(G, pi, start, 100)
+    states, rewards = GDM.run_policy(G, pi, start, 100)
     assert len(states) == 99
     assert len(rewards) == 99
     assert rewards[-1] == 1
@@ -96,7 +96,7 @@ def test_value_iteration():
     start, G = __build_grid_world(5, 10)
     pi = PassiveRL.value_iteration(G, 100, 0.8, 1e-13, in_place=False)
     assert pi != None
-    states, rewards = GSDM.run_policy(G, pi, start, 100)
+    states, rewards = GDM.run_policy(G, pi, start, 100)
     assert len(states) == 14
     assert len(rewards) == 14
     assert rewards[-1] == 1
@@ -106,7 +106,7 @@ def test_in_place_value_iteration():
     start, G = __build_grid_world(8, 10)
     pi = PassiveRL.value_iteration(G, 100, 0.8, 1e-13, in_place=True)
     assert pi != None
-    states, rewards = GSDM.run_policy(G, pi, start, 100)
+    states, rewards = GDM.run_policy(G, pi, start, 100)
     assert len(states) == 17
     assert len(rewards) == 17
     assert rewards[-1] == 1
@@ -117,8 +117,8 @@ def test_direct_utility_estimation():
     DUE.initialize_for_direct_utility_estimation(G)
 
     for _ in range(200):
-        pi = GSDM.create_policy_from_utility(G)
-        states, rewards = GSDM.run_policy(G, pi, start, 40)
+        pi = GDM.create_policy_from_utility(G)
+        states, rewards = GDM.run_policy(G, pi, start, 40)
         DUE.direct_utility_estimation(G, 0.6, states, rewards)
         if rewards[-1] == 1:
             break

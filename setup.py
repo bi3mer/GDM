@@ -1,6 +1,6 @@
 from setuptools import find_packages, setup
 setup(
-    name='GSDM',
+    name='GDM',
     packages=find_packages(),
     version='0.1.0',
     description='Graph-based sequential decision making (GDSM) is a simple library for MDP and model-free methods using networkx.',
