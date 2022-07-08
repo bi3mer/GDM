@@ -1,7 +1,7 @@
-from random import choice
+from random import choice, random
 from math import inf
 
-from .Keys import U, R, T
+from .Keys import U, R, T, P
 
 def reset_utility(G):
     for n in G.nodes:
@@ -33,13 +33,23 @@ def create_policy_from_utility(G):
 def run_policy(G, pi, start, max_steps):
     states = [start]
     rewards = [G.nodes[start][R]]
+    cur_state = start
 
     for _ in range(max_steps):
-        if G.nodes[start][T]:
+        if G.nodes[cur_state][T]:
             break
         
-        start = pi[start]
-        states.append(start)
-        rewards.append(G.nodes[start][R])
+        tgt_state = pi[cur_state]
+        p = random()
+        for next_state, probability in G.edges[(cur_state, tgt_state)][P].items():
+            if p <= probability:
+                tgt_state = next_state
+                break
+            else:
+                p -= probability
+
+        states.append(tgt_state)
+        rewards.append(G.nodes[tgt_state][R])
+        cur_state = tgt_state
 
     return states, rewards

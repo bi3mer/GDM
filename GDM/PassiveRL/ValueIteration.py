@@ -9,8 +9,10 @@ def __in_place_value_iteration(G, max_iteration, gamma, theta):
 
         for n in G:
             r = G.nodes[n][R]
-            u = r + gamma*max(G.edges[(n, n_p)][P] * G.nodes[n_p][U] for n_p in G.neighbors(n))
+            u = max(sum([p_val*G.nodes[n_true][U] for n_true, p_val in G.edges[(n, n_p)][P].items()]) for n_p in G.neighbors(n))
+            u = r + gamma*u
             delta = max(delta, abs(G.nodes[n][U] - u))
+            
             G.nodes[n][U] = u
 
         if delta < theta:
@@ -23,7 +25,8 @@ def __value_iteration(G, max_iteration, gamma, theta):
 
         for n in G:
             r = G.nodes[n][R]
-            u = r + gamma * max(G.edges[(n, n_p)][P] * G.nodes[n_p][U] for n_p in G.neighbors(n))
+            u = max(sum([p_val*G.nodes[n_true][U] for n_true, p_val in G.edges[(n, n_p)][P].items()]) for n_p in G.neighbors(n))
+            u = r + gamma*u
             delta = max(delta, abs(G.nodes[n][U] - u))
 
             u_temp[n] = {U: u}

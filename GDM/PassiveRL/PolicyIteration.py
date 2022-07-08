@@ -9,8 +9,7 @@ def __modified_in_place_policy_evaluation(G, pi, gamma, policy_k):
     for __ in range(policy_k):
         for n in G:
             r = G.nodes[n][R]
-            n_p = pi[n]
-            u = G.edges[(n, n_p)][P] *G.nodes[n_p][U]
+            u = sum([p_val*G.nodes[n_true][U] for n_true, p_val in G.edges[(n, pi[n])][P].items()])
             G.nodes[n][U] = r + gamma * u
 
 def __modified_policy_evaluation(G, pi, gamma, policy_k):
@@ -18,8 +17,7 @@ def __modified_policy_evaluation(G, pi, gamma, policy_k):
         u_temp = {}
         for n in G:
             r = G.nodes[n][R]
-            n_p = pi[n]
-            u = G.edges[(n, n_p)][P] * G.nodes[n_p][U]
+            u = sum([p_val*G.nodes[n_true][U] for n_true, p_val in G.edges[(n, pi[n])][P].items()])
             u_temp[n] = {U: r + gamma*u}
         
         set_node_attributes(G, u_temp)
@@ -28,7 +26,7 @@ def __in_place_policy_evaluation(G, _, gamma, policy_k):
     for __ in range(policy_k):
         for n in G:
             r = G.nodes[n][R]
-            u = max(G.edges[(n, n_p)][P] * G.nodes[n_p][U] for n_p in G.neighbors(n)) 
+            u = max(sum([p_val*G.nodes[n_true][U] for n_true, p_val in G.edges[(n, n_p)][P].items()]) for n_p in G.neighbors(n))
             G.nodes[n][U] = r + gamma * u
 
 def __policy_evaluation(G, _, gamma, policy_k):
@@ -36,7 +34,7 @@ def __policy_evaluation(G, _, gamma, policy_k):
         u_temp = {}
         for n in G:
             r = G.nodes[n][R]
-            u = max(G.edges[(n, n_p)][P] * G.nodes[n_p][U] for n_p in G.neighbors(n)) 
+            u = max(sum([p_val*G.nodes[n_true][U] for n_true, p_val in G.edges[(n, n_p)][P].items()]) for n_p in G.neighbors(n))
             u_temp[n] = {U: r + gamma*u}
         
         set_node_attributes(G, u_temp)
