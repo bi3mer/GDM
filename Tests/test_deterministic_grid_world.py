@@ -120,7 +120,7 @@ def test_direct_utility_estimation():
 
     start, G = __build_grid_world(5, 4)
     pi = create_policy_from_utility(G)
-    for _ in range(200):
+    for _ in range(500):
         states, rewards = run_epsilon_greedy_utility_policy(G, start, pi, EPSILON, MAX_STEPS)
         pi = DUE.direct_utility_estimation(G, GAMMA, states, rewards)
 

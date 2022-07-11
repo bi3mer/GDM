@@ -1,7 +1,6 @@
 from random import choice, random, choices
-from math import inf
 from typing import Dict, List, Tuple
-
+from math import inf
 
 from .Graph import Graph
 
@@ -9,7 +8,7 @@ def reset_utility(G: Graph):
     for n in G.nodes:
         G.nodes[n].utility = 0
 
-def create_random_policy(G: Graph):
+def create_random_policy(G: Graph) -> Dict[str, str]:
     pi: dict[str, str] = {} 
     for n in G.nodes:
         pi[n] = choice(list(G.neighbors(n)))
@@ -56,7 +55,10 @@ def run_policy(G: Graph, start: str, pi: Dict[str, str], max_steps: int) -> Tupl
 
     return states, rewards
 
-def run_epsilon_greedy_utility_policy(G: Graph, start: str, pi: Dict[str, str], epsilon: float, max_steps: int) -> Tuple[List[str], List[float]]:
+def run_epsilon_greedy_utility_policy(
+        G: Graph, start: str, pi: Dict[str, str], epsilon: float, 
+        max_steps: int) -> Tuple[List[str], List[float]]:
+        
     states = [start]
     rewards = [G.get_node(start).reward]
     cur_state = start

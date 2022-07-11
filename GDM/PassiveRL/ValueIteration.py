@@ -36,7 +36,8 @@ def __value_iteration(G: Graph, max_iteration: int, gamma: float, theta: float):
         if delta < theta:
             break
 
-def value_iteration(G: Graph, max_iteration: int, gamma: float, theta: float, in_place: bool=False, should_reset_utility: bool=True):
+def value_iteration(G: Graph, max_iteration: int, gamma: float, theta: float, 
+                    in_place: bool=False, should_reset_utility: bool=True) -> Dict[str, str]:
     if should_reset_utility:
         reset_utility(G)
 

@@ -41,7 +41,7 @@ def __policy_evaluation(G: Graph, _, gamma: float, policy_k: int):
         G.set_node_utilities(u_temp)
 
 ######################## Policy Improvement ########################
-def __policy_improvement(G: Graph, pi: Dict[str, str]):
+def __policy_improvement(G: Graph, pi: Dict[str, str]) -> bool:
     changed = False
     for n in G.nodes:
         old = pi[n]
