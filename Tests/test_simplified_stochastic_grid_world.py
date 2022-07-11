@@ -4,11 +4,6 @@ from GDM.Graph import Graph
 from GDM.utility import *
 
 from random import seed
-# TODO: test with best policy to make sure the ideal path is still correct
-
-
-def __is_solid_block(x,y):
-    return x == 1 and y == 1
 
 def __build_grid_world(MAX_X, MAX_Y):
     '''
@@ -150,3 +145,4 @@ def test_direct_utility_estimation():
     assert len(states) == len(rewards)
     assert rewards[-1] == 1
     assert states[-1] == '2_3'
+    
