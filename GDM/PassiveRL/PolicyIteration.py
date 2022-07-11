@@ -13,15 +13,15 @@ def __modified_in_place_policy_evaluation(G: Graph, pi: Dict[str, str], gamma: f
             u = sum([p_val*G.get_node(n_true).utility for n_true, p_val in G.edges[(n, pi[n])].probability.items()])
             G.nodes[n].utility = r + gamma * u
 
-def __modified_policy_evaluation(G, pi, gamma, policy_k):
+def __modified_policy_evaluation(G: Graph, pi: Dict[str, str], gamma: float, policy_k: int):
     for __ in range(policy_k):
-        u_temp = {}
+        u_temp: Dict[str, float] = {}
         for n in G.nodes:
-            r = G.nodes[n][R]
-            u = sum([p_val*G.nodes[n_true][U] for n_true, p_val in G.edges[(n, pi[n])][P].items()])
-            u_temp[n] = {U: r + gamma*u}
+            r = G.nodes[n].reward
+            u = sum([p_val*G.nodes[n_true].utility for n_true, p_val in G.edges[(n, pi[n])].probability.items()])
+            u_temp[n] = r + gamma*u
         
-        set_node_attributes(G, u_temp)
+        G.set_node_utilities(u_temp)
 
 def __in_place_policy_evaluation(G: Graph, _, gamma: float, policy_k: int):
     for __ in range(policy_k):
@@ -30,15 +30,15 @@ def __in_place_policy_evaluation(G: Graph, _, gamma: float, policy_k: int):
             u = max(sum([p_val*G.nodes[n_true].utility for n_true, p_val in G.edges[(n, n_p)].probability.items()]) for n_p in G.neighbors(n))
             G.nodes[n].utility = r + gamma * u
 
-def __policy_evaluation(G, _, gamma, policy_k):
+def __policy_evaluation(G: Graph, _, gamma: float, policy_k: int):
     for __ in range(policy_k):
-        u_temp = {}
-        for n in G.neighbors.nodes:
-            r = G.nodes[n][R]
-            u = max(sum([p_val*G.nodes[n_true][U] for n_true, p_val in G.edges[(n, n_p)][P].items()]) for n_p in G.neighbors(n))
-            u_temp[n] = {U: r + gamma*u}
+        u_temp: Dict[str, float] = {}
+        for n in G.nodes:
+            r = G.nodes[n].reward
+            u = max(sum([p_val*G.nodes[n_true].utility for n_true, p_val in G.edges[(n, n_p)].probability.items()]) for n_p in G.neighbors(n))
+            u_temp[n] = r + gamma*u
         
-        set_node_attributes(G, u_temp)
+        G.set_node_utilities(u_temp)
 
 ######################## Policy Improvement ########################
 def __policy_improvement(G: Graph, pi: Dict[str, str]):
@@ -61,7 +61,9 @@ def __policy_improvement(G: Graph, pi: Dict[str, str]):
     return changed
 
 ######################## Policy Iteration ########################
-def policy_iteration(G, gamma, modified=False, in_place=False, policy_k=10, should_reset_utility=True):
+def policy_iteration(G: Graph, gamma: float, modified: bool=False, 
+                     in_place: bool=False, policy_k: int=10, 
+                     should_reset_utility: bool=True) -> Dict[str, str]:
     # reset utility
     if should_reset_utility:
         reset_utility(G) 

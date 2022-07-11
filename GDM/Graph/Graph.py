@@ -55,5 +55,8 @@ class Graph:
 
     ##### Useful Functions
     def neighbors(self, node_name: str) -> Set[str]:
-        # print(f'{node_name} -> {len(self.nodes[node_name].neighbors)}')
         return self.nodes[node_name].neighbors
+
+    def set_node_utilities(self, utilities: Dict[str, float]):
+        for node_name, utility in utilities.items():
+            self.nodes[node_name].utility = utility

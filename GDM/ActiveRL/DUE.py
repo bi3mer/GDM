@@ -1,19 +1,15 @@
+from typing import List, Dict
+
 from ..utility import create_policy_from_utility
+from ..Graph import Graph
 
-def initialize_for_direct_utility_estimation(G):
-    for n in G.nodes:
-        node = G.nodes[n]
-        node[U] = 0
-        node[SUM] = 0
-        node[VC] = 0
-
-def direct_utility_estimation(G, gamma, states, rewards):
+def direct_utility_estimation(G: Graph, gamma: float, states: List[str], rewards: List[float]) -> Dict[str, str]:
     utility = gamma * sum(rewards)
 
     for s in states:
-        node = G.nodes[s]
-        node[SUM] += utility
-        node[VC] += 1
-        node[U] = node[SUM] / node[VC]
+        node = G.get_node(s)
+        node.reward_sum += utility
+        node.times_visited += 1
+        node.utility = node.reward_sum / node.times_visited
 
     return create_policy_from_utility(G)
