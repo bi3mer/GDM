@@ -1,7 +1,6 @@
-from networkx import set_node_attributes
+# from networkx import set_node_attributes
 
 from ..utility import reset_utility, create_policy_from_utility
-from ..Keys import U, R, P
 
 def __in_place_value_iteration(G, max_iteration, gamma, theta):
     for _ in range(max_iteration):

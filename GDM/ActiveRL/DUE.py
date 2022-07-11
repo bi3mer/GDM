@@ -1,5 +1,4 @@
 from ..utility import create_policy_from_utility
-from ..Keys import U, VC, SUM
 
 def initialize_for_direct_utility_estimation(G):
     for n in G.nodes:

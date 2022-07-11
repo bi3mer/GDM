@@ -1,38 +1,39 @@
-from networkx import set_node_attributes
+# from networkx import set_node_attributes
+from typing import Dict
 from math import inf
+from ..Graph import Graph
 
 from ..utility import create_random_policy, reset_utility
-from ..Keys import U, R, P
 
 ######################## Policy Evaluation ########################
-def __modified_in_place_policy_evaluation(G, pi, gamma, policy_k):
+def __modified_in_place_policy_evaluation(G: Graph, pi: Dict[str, str], gamma: float, policy_k: int):
     for __ in range(policy_k):
-        for n in G:
-            r = G.nodes[n][R]
-            u = sum([p_val*G.nodes[n_true][U] for n_true, p_val in G.edges[(n, pi[n])][P].items()])
-            G.nodes[n][U] = r + gamma * u
+        for n in G.nodes:
+            r = G.get_node(n).reward
+            u = sum([p_val*G.get_node(n_true).utility for n_true, p_val in G.edges[(n, pi[n])].probability.items()])
+            G.nodes[n].utility = r + gamma * u
 
 def __modified_policy_evaluation(G, pi, gamma, policy_k):
     for __ in range(policy_k):
         u_temp = {}
-        for n in G:
+        for n in G.nodes:
             r = G.nodes[n][R]
             u = sum([p_val*G.nodes[n_true][U] for n_true, p_val in G.edges[(n, pi[n])][P].items()])
             u_temp[n] = {U: r + gamma*u}
         
         set_node_attributes(G, u_temp)
 
-def __in_place_policy_evaluation(G, _, gamma, policy_k):
+def __in_place_policy_evaluation(G: Graph, _, gamma: float, policy_k: int):
     for __ in range(policy_k):
-        for n in G:
-            r = G.nodes[n][R]
-            u = max(sum([p_val*G.nodes[n_true][U] for n_true, p_val in G.edges[(n, n_p)][P].items()]) for n_p in G.neighbors(n))
-            G.nodes[n][U] = r + gamma * u
+        for n in G.nodes:
+            r = G.nodes[n].reward
+            u = max(sum([p_val*G.nodes[n_true].utility for n_true, p_val in G.edges[(n, n_p)].probability.items()]) for n_p in G.neighbors(n))
+            G.nodes[n].utility = r + gamma * u
 
 def __policy_evaluation(G, _, gamma, policy_k):
     for __ in range(policy_k):
         u_temp = {}
-        for n in G:
+        for n in G.neighbors.nodes:
             r = G.nodes[n][R]
             u = max(sum([p_val*G.nodes[n_true][U] for n_true, p_val in G.edges[(n, n_p)][P].items()]) for n_p in G.neighbors(n))
             u_temp[n] = {U: r + gamma*u}
@@ -40,15 +41,15 @@ def __policy_evaluation(G, _, gamma, policy_k):
         set_node_attributes(G, u_temp)
 
 ######################## Policy Improvement ########################
-def __policy_improvement(G, pi):
+def __policy_improvement(G: Graph, pi: Dict[str, str]):
     changed = False
-    for n in G:
+    for n in G.nodes:
         old = pi[n]
 
         best_s = None
         best_u = -inf
         for n_p in G.neighbors(n):
-            u_p = G.nodes[n_p][U]
+            u_p = G.nodes[n_p].utility
             if u_p > best_u:
                 best_s = n_p
                 best_u = u_p
