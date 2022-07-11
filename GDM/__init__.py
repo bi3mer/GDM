@@ -1,4 +1,4 @@
 from . import PassiveRL
 from . import ActiveRL
 from . import Graph
-from .utility import *
+from . import utility

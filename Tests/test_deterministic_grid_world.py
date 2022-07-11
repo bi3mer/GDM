@@ -1,11 +1,10 @@
 from GDM.ActiveRL import DUE
 from GDM import PassiveRL
 from GDM.Graph import Graph
-from GDM import run_epsilon_greedy_utility_policy, create_policy_from_utility
+from GDM.utility import *
 
 from random import seed
 
-from GDM.utility import run_policy
 
 def __build_grid_world(MAX_X, MAX_Y):
     g = Graph() 
@@ -28,7 +27,7 @@ def __build_grid_world(MAX_X, MAX_Y):
 
     # create edges
     for src in g.nodes:
-        # get naem
+        # get name
         y, x = [int(i) for i in src.split('_')]
 
         # create left connection
