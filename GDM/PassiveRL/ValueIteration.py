@@ -1,6 +1,6 @@
 from typing import Dict
 
-from ..utility import reset_utility, create_policy_from_utility, expected_utility_sum, max_expected_utility_sum
+from ..utility import reset_utility, create_policy_from_utility, calculate_utility, max_expected_utility_sum
 from ..Graph import Graph
 
 def __in_place_value_iteration(G: Graph, max_iteration: int, gamma: float, theta: float):
@@ -8,11 +8,14 @@ def __in_place_value_iteration(G: Graph, max_iteration: int, gamma: float, theta
         delta = 0
 
         for n in G.nodes:
-            r = G.nodes[n].reward
-            u = r + gamma * max_expected_utility_sum(G, n)
-            delta = max(delta, abs(G.nodes[n].utility - u))
+            node = G.get_node(n)
+            if node.is_terminal:
+                continue
+
+            u = calculate_utility(G, node, gamma)
+            delta = max(delta, abs(node.utility - u))
             
-            G.nodes[n].utility = u
+            node.utility = u
 
         if delta < theta:
             break
@@ -23,12 +26,16 @@ def __value_iteration(G: Graph, max_iteration: int, gamma: float, theta: float):
         u_temp: Dict[str, float] = {}
 
         for n in G.nodes:
-            r = G.nodes[n].reward
-            u = r + gamma * max_expected_utility_sum(G, n)
-            delta = max(delta, abs(G.nodes[n].utility - u))
+            node = G.get_node(n)
+            if node.is_terminal:
+                continue
+            
+            # u = node.reward + gamma * max_expected_utility_sum(G, n)
+            u = calculate_utility(G, node, gamma)
+            delta = max(delta, abs(node.utility - u))
 
             u_temp[n] = u
-
+        
         G.set_node_utilities(u_temp)
 
         if delta < theta:
@@ -44,5 +51,5 @@ def value_iteration(G: Graph, max_iteration: int, gamma: float, theta: float,
     else:
         __value_iteration(G, max_iteration, gamma, theta)
 
-    return create_policy_from_utility(G)
+    return create_policy_from_utility(G, gamma)
 

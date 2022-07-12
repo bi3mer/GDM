@@ -60,3 +60,9 @@ class Graph:
     def set_node_utilities(self, utilities: Dict[str, float]):
         for node_name, utility in utilities.items():
             self.nodes[node_name].utility = utility
+
+    def utility(self, node_name: str) -> float:
+        return self.nodes[node_name].utility
+
+    def reward(self, node_name: str) -> float:
+        return self.nodes[node_name].reward

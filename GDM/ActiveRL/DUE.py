@@ -12,4 +12,4 @@ def direct_utility_estimation(G: Graph, gamma: float, states: List[str], rewards
         node.times_visited += 1
         node.utility = node.reward_sum / node.times_visited
 
-    return create_policy_from_utility(G)
+    return create_policy_from_utility(G, gamma)
