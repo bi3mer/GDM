@@ -7,7 +7,7 @@ from random import seed
 MAX_X = 4
 MAX_Y = 3
 
-GAMMA = 0.9
+GAMMA = 1.0
 THETA = 1e-15
 N = 1_000
 
@@ -96,7 +96,17 @@ def __display_utility_table(G):
         print(out)
         print('--------' * MAX_X + '-')
 
-def __positive_reward_tester(rl_lambda):
+def __small_positive_reward_tester(rl_lambda):
+    seed(0)
+    start, G = __build_grid_world(0.05)
+    pi = rl_lambda(G)
+    assert pi != None
+
+    states, rewards = run_policy(G, start, pi, 30)
+    assert len(states) == 31
+    assert len(states) == len(rewards)
+
+def __large_positive_reward_tester(rl_lambda):
     seed(0)
     start, G = __build_grid_world(0.6)
     pi = rl_lambda(G)
@@ -108,7 +118,7 @@ def __positive_reward_tester(rl_lambda):
 
 def __small_negative_reward_tester(rl_lambda):
     seed(0)
-    _, G = __build_grid_world(-0.04)
+    _, G = __build_grid_world(-0.01)
     pi = rl_lambda(G)
     assert pi != None
 
@@ -125,7 +135,7 @@ def __small_negative_reward_tester(rl_lambda):
     assert pi['0_1'] == '0_0'
     assert pi['0_2'] == '0_1'
     assert pi['0_3'] == '0_2'
-    assert pi['1_1'] == '2_1'
+    assert pi['1_2'] == '2_2'
 
 def __medium_negative_reward_tester(rl_lambda):
     seed(0)
@@ -171,8 +181,12 @@ def __very_negative_reward_tester(rl_lambda):
 
 ##### Value Iteration
 value_iteration_lambda = lambda G: PassiveRL.value_iteration(G, N, GAMMA, THETA)
-def test_value_iteration_positive_reward():
-    __positive_reward_tester(value_iteration_lambda)
+
+def test_value_iteration_small_positive_reward():
+    __small_positive_reward_tester(value_iteration_lambda)
+
+def test_value_iteration_large_positive_reward():
+    __large_positive_reward_tester(value_iteration_lambda)
 
 def test_value_iteration_small_negative_reward():
     __small_negative_reward_tester(value_iteration_lambda)

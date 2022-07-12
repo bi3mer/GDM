@@ -23,8 +23,6 @@ def calculate_utility(G: Graph, n: Node, gamma: float) -> float:
     for n_p in G.neighbors(n.name):
         Q = []
         for n_tgt, prob in G.get_edge(n.name, n_p).probability:
-            # Q.append(n.reward + prob * gamma * G.utility(n_tgt))
-            # Q.append(prob * (n.reward + gamma * G.utility(n_p)))
             node = G.get_node(n_tgt)
             Q.append(prob * (node.reward + node.utility))
 
