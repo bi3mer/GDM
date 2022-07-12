@@ -1,6 +1,6 @@
 from typing import Dict
 
-from ..utility import reset_utility, create_policy_from_utility
+from ..utility import reset_utility, create_policy_from_utility, expected_utility_sum, max_expected_utility_sum
 from ..Graph import Graph
 
 def __in_place_value_iteration(G: Graph, max_iteration: int, gamma: float, theta: float):
@@ -9,8 +9,7 @@ def __in_place_value_iteration(G: Graph, max_iteration: int, gamma: float, theta
 
         for n in G.nodes:
             r = G.nodes[n].reward
-            u = max(sum([p_val*G.nodes[n_true].utility for n_true, p_val in G.edges[(n, n_p)].probability.items()]) for n_p in G.neighbors(n))
-            u = r + gamma*u
+            u = r + gamma * max_expected_utility_sum(G, n)
             delta = max(delta, abs(G.nodes[n].utility - u))
             
             G.nodes[n].utility = u
@@ -25,8 +24,7 @@ def __value_iteration(G: Graph, max_iteration: int, gamma: float, theta: float):
 
         for n in G.nodes:
             r = G.nodes[n].reward
-            u = max(sum([p_val*G.nodes[n_true].utility for n_true, p_val in G.edges[(n, n_p)].probability.items()]) for n_p in G.neighbors(n))
-            u = r + gamma*u
+            u = r + gamma * max_expected_utility_sum(G, n)
             delta = max(delta, abs(G.nodes[n].utility - u))
 
             u_temp[n] = u

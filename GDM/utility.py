@@ -1,8 +1,14 @@
-from random import choice, random, choices
 from typing import Dict, List, Tuple
+from random import choice, random
 from math import inf
 
 from .Graph import Graph
+
+def expected_utility_sum(g: Graph, n: str, n_p: str) -> float:
+    return sum(p_p*g.get_node(p_n).utility for p_n, p_p in g.edges[(n, n_p)].probability.items())
+
+def max_expected_utility_sum(g: Graph, n: str) -> float:
+    return max(expected_utility_sum(g, n, n_p) for n_p in g.neighbors(n))
 
 def reset_utility(G: Graph):
     for n in G.nodes:
@@ -19,10 +25,10 @@ def create_policy_from_utility(G: Graph) -> Dict[str, str]:
     pi: Dict[str, str] = {}
     for n in G.nodes:
         best_u = -inf
-        best_n = None
+        best_n: str
 
         for n_p in G.neighbors(n):
-            u = G.nodes[n_p].utility
+            u = expected_utility_sum(G, n, n_p)
             if u > best_u:
                 best_u = u
                 best_n = n_p

@@ -5,7 +5,7 @@ from GDM.utility import *
 
 from random import seed
 
-def __build_grid_world(MAX_X, MAX_Y):
+def __build_grid_world(MAX_X: int, MAX_Y: int):
     '''
     This is a simplified version of stochastic grid world where 20% of the time
     the agent will not move. The more common version is 80% of the time the 
@@ -55,7 +55,6 @@ def __build_grid_world(MAX_X, MAX_Y):
             g.add_default_edge(src, tgt, {tgt: 0.8, src: 0.2})
 
     return '0_0', g
-
 
 def test_policy_iteration():
     seed(0)

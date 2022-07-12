@@ -3,14 +3,14 @@ from typing import Dict
 from math import inf
 from ..Graph import Graph
 
-from ..utility import create_random_policy, reset_utility
+from ..utility import create_random_policy, reset_utility, expected_utility_sum, max_expected_utility_sum
 
 ######################## Policy Evaluation ########################
 def __modified_in_place_policy_evaluation(G: Graph, pi: Dict[str, str], gamma: float, policy_k: int):
     for __ in range(policy_k):
         for n in G.nodes:
             r = G.get_node(n).reward
-            u = sum([p_val*G.get_node(n_true).utility for n_true, p_val in G.edges[(n, pi[n])].probability.items()])
+            u = expected_utility_sum(G, n, pi[n])
             G.nodes[n].utility = r + gamma * u
 
 def __modified_policy_evaluation(G: Graph, pi: Dict[str, str], gamma: float, policy_k: int):
@@ -18,7 +18,7 @@ def __modified_policy_evaluation(G: Graph, pi: Dict[str, str], gamma: float, pol
         u_temp: Dict[str, float] = {}
         for n in G.nodes:
             r = G.nodes[n].reward
-            u = sum([p_val*G.nodes[n_true].utility for n_true, p_val in G.edges[(n, pi[n])].probability.items()])
+            u = expected_utility_sum(G, n, pi[n])
             u_temp[n] = r + gamma*u
         
         G.set_node_utilities(u_temp)
@@ -27,7 +27,7 @@ def __in_place_policy_evaluation(G: Graph, _, gamma: float, policy_k: int):
     for __ in range(policy_k):
         for n in G.nodes:
             r = G.nodes[n].reward
-            u = max(sum([p_val*G.nodes[n_true].utility for n_true, p_val in G.edges[(n, n_p)].probability.items()]) for n_p in G.neighbors(n))
+            u = max_expected_utility_sum(G, n)
             G.nodes[n].utility = r + gamma * u
 
 def __policy_evaluation(G: Graph, _, gamma: float, policy_k: int):
@@ -35,7 +35,7 @@ def __policy_evaluation(G: Graph, _, gamma: float, policy_k: int):
         u_temp: Dict[str, float] = {}
         for n in G.nodes:
             r = G.nodes[n].reward
-            u = max(sum([p_val*G.nodes[n_true].utility for n_true, p_val in G.edges[(n, n_p)].probability.items()]) for n_p in G.neighbors(n))
+            u = max_expected_utility_sum(G, n)
             u_temp[n] = r + gamma*u
         
         G.set_node_utilities(u_temp)
