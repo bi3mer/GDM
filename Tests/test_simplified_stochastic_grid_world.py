@@ -56,29 +56,29 @@ def __build_grid_world(MAX_X: int, MAX_Y: int):
 
     return '0_0', g
 
-# def test_policy_iteration():
-#     seed(0)
-#     start, G = __build_grid_world(5, 5)
-#     pi = PassiveRL.policy_iteration(G, 0.6)
-#     assert pi != None
-#     states, rewards = run_policy(G, start, pi, 20)
-#     assert len(states) >= 9
-#     assert len(states) <= 20
-#     assert len(rewards) == len(states)
-#     assert rewards[-1] == 1
-#     assert states[-1] == '4_4'
+def test_policy_iteration():
+    seed(0)
+    start, G = __build_grid_world(5, 5)
+    pi = PassiveRL.policy_iteration(G, 0.6)
+    assert pi != None
+    states, rewards = run_policy(G, start, pi, 20)
+    assert len(states) >= 9
+    assert len(states) <= 20
+    assert len(rewards) == len(states)
+    assert rewards[-1] == 1
+    assert states[-1] == '4_4'
 
-# def test_in_place_policy_iteration():
-#     seed(0)
-#     start, G = __build_grid_world(20, 20)
-#     pi = PassiveRL.policy_iteration(G, 0.5, in_place=True)
-#     assert pi != None
-#     states, rewards = run_policy(G, start, pi, 100)
-#     assert len(states) >= 39
-#     assert len(states) <= 100
-#     assert len(states) == len(rewards)
-#     assert rewards[-1] == 1
-#     assert states[-1] == '19_19'
+def test_in_place_policy_iteration():
+    seed(0)
+    start, G = __build_grid_world(20, 20)
+    pi = PassiveRL.policy_iteration(G, 0.5, in_place=True)
+    assert pi != None
+    states, rewards = run_policy(G, start, pi, 100)
+    assert len(states) >= 39
+    assert len(states) <= 100
+    assert len(states) == len(rewards)
+    assert rewards[-1] == 1
+    assert states[-1] == '19_19'
 
 # def test_modified_policy_iteration():
 #     seed(0)
@@ -128,20 +128,20 @@ def test_in_place_value_iteration():
     assert rewards[-1] == 1
     assert states[-1] == '9_7'
 
-# def test_direct_utility_estimation():
-#     seed(0)
-#     start, G = __build_grid_world(4, 3)
+def test_direct_utility_estimation():
+    seed(0)
+    start, G = __build_grid_world(4, 3)
+    pi = create_policy_from_utility(G, 0.8)
 
-#     for _ in range(200):
-#         pi = create_policy_from_utility(G)
-#         states, rewards = run_epsilon_greedy_utility_policy(G, start, pi, 0.2, 40)
-#         DUE.direct_utility_estimation(G, 0.6, states, rewards)
-#         if rewards[-1] == 1:
-#             break
-
-#     assert len(states) >= 5
-#     assert len(states) <= 100
-#     assert len(states) == len(rewards)
-#     assert rewards[-1] == 1
-#     assert states[-1] == '2_3'
+    for _ in range(200):
+        states, rewards = run_epsilon_greedy_utility_policy(G, start, pi, 0.2, 40)
+        pi = DUE.direct_utility_estimation(G, 0.6, states, rewards)
+    
+    states, rewards = run_policy(G, start, pi, 50)
+    
+    assert len(states) >= 5
+    assert len(states) <= 100
+    assert len(states) == len(rewards)
+    assert rewards[-1] == 1
+    assert states[-1] == '2_3'
     

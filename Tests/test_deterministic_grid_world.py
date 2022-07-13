@@ -52,21 +52,6 @@ def __build_grid_world(MAX_X, MAX_Y):
     return '0_0', g
 
 def __display_utility_table(G, MAX_X, MAX_Y):
-    pi = debug_policy(G, 0.8)
-    print('--------' * MAX_X + '-')
-    for y in reversed(range(MAX_Y)):
-        out = '| '
-        for x in range(MAX_X):
-            if x == 1 and y == 1:
-                out += '      |'
-            else:
-                key = f'{y}_{x}'
-                # out +=  '{:.2f} | '.format(G.get_node(key).utility)
-                out +=  '{:.2f} | '.format(pi[key])
-        
-        print(out)
-        print('--------' * MAX_X + '-')
-
     print()
     print('--------' * MAX_X + '-')
     for y in reversed(range(MAX_Y)):
@@ -81,31 +66,27 @@ def __display_utility_table(G, MAX_X, MAX_Y):
         print(out)
         print('--------' * MAX_X + '-')
 
-# def test_policy_iteration():
-#     X = 4
-#     Y = 3
-#     seed(0)
-#     start, G = __build_grid_world(X, Y)
-#     pi = PassiveRL.policy_iteration(G, 0.6)
-#     assert pi != None
-#     states, rewards = run_policy(G, start, pi, 30)
-#     print(states)
+def test_policy_iteration():
+    seed(0)
+    start, G = __build_grid_world(5, 5)
+    pi = PassiveRL.policy_iteration(G, 0.6)
+    assert pi != None
+    states, rewards = run_policy(G, start, pi, 30)
 
-#     __display_utility_table(G, X, Y)
-#     assert rewards[-1] == 1
-#     assert len(states) == 9
-#     assert len(rewards) == 9
-#     assert states[-1] == '4_4'
+    assert rewards[-1] == 1
+    assert len(states) == 9
+    assert len(rewards) == 9
+    assert states[-1] == '4_4'
 
-# def test_in_place_policy_iteration():
-#     start, G = __build_grid_world(20, 20)
-#     pi = PassiveRL.policy_iteration(G, 0.5, in_place=True)
-#     assert pi != None
-#     states, rewards = run_policy(G, start, pi,100)
-#     assert rewards[-1] == 1
-#     assert len(states) == 39
-#     assert len(rewards) == 39
-#     assert states[-1] == '19_19'
+def test_in_place_policy_iteration():
+    start, G = __build_grid_world(20, 20)
+    pi = PassiveRL.policy_iteration(G, 0.5, in_place=True)
+    assert pi != None
+    states, rewards = run_policy(G, start, pi,100)
+    assert rewards[-1] == 1
+    assert len(states) == 39
+    assert len(rewards) == 39
+    assert states[-1] == '19_19'
 
 # def test_modified_policy_iteration():
 #     seed(0)
@@ -154,21 +135,21 @@ def test_in_place_value_iteration():
     assert len(rewards) == 17
     assert states[-1] == '9_7'
 
-# def test_direct_utility_estimation():
-#     MAX_STEPS = 50
-#     GAMMA = 0.9
-#     EPSILON = 0.2 
-#     seed(0)
+def test_direct_utility_estimation():
+    MAX_STEPS = 50
+    GAMMA = 0.9
+    EPSILON = 0.2 
+    seed(0)
 
-#     start, G = __build_grid_world(5, 4)
-#     pi = create_policy_from_utility(G, GAMMA)
-#     for _ in range(250):
-#         states, rewards = run_epsilon_greedy_utility_policy(G, start, pi, EPSILON, MAX_STEPS)
-#         pi = DUE.direct_utility_estimation(G, GAMMA, states, rewards)
+    start, G = __build_grid_world(5, 4)
+    pi = create_policy_from_utility(G, GAMMA)
+    for _ in range(250):
+        states, rewards = run_epsilon_greedy_utility_policy(G, start, pi, EPSILON, MAX_STEPS)
+        pi = DUE.direct_utility_estimation(G, GAMMA, states, rewards)
 
-#     states, rewards = run_policy(G, start, pi, MAX_STEPS)
+    states, rewards = run_policy(G, start, pi, MAX_STEPS)
     
-#     assert rewards[-1] == 1 or rewards[-1] == -1
-#     assert len(states) == 8
-#     assert len(states) == len(rewards)
-    # assert states[-1] == '3_4'
+    assert rewards[-1] == 1 or rewards[-1] == -1
+    assert len(states) == 8
+    assert len(states) == len(rewards)
+    assert states[-1] == '3_4'

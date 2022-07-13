@@ -201,6 +201,39 @@ def test_value_iteration_very_negative_reward():
 # def test_in_place_value_iteration_positive_reward():
 #     __positive_reward_tester(lambda G: PassiveRL.value_iteration(G, N, GAMMA, THETA))
 
-# # ##### Policy Iteration
-# # def test_policy_iteration_positive_reward():
-# #     __positive_reward_tester(lambda G: PassiveRL.policy_iteration(G, GAMMA))
+##### Policy Iteration
+policy_iteration_lambda = lambda G: PassiveRL.policy_iteration(G, GAMMA)
+
+def test_policy_iteration_small_positive_reward():
+    __small_positive_reward_tester(policy_iteration_lambda)
+
+def test_policy_iteration_large_positive_reward():
+    __large_positive_reward_tester(policy_iteration_lambda)
+
+def test_policy_iteration_small_negative_reward():
+    __small_negative_reward_tester(policy_iteration_lambda)
+
+def test_policy_iteration_medium_negative_reward():
+    __medium_negative_reward_tester(policy_iteration_lambda)
+
+def test_policy_iteration_very_negative_reward():
+    __very_negative_reward_tester(policy_iteration_lambda)
+
+
+##### In-Place Policy Iteration
+in_place_policy_iteration_lambda = lambda G: PassiveRL.policy_iteration(G, GAMMA, in_place=True)
+
+def test_in_place_policy_iteration_small_positive_reward():
+    __small_positive_reward_tester(in_place_policy_iteration_lambda)
+
+def test_in_place_policy_iteration_large_positive_reward():
+    __large_positive_reward_tester(in_place_policy_iteration_lambda)
+
+def test_in_place_policy_iteration_small_negative_reward():
+    __small_negative_reward_tester(in_place_policy_iteration_lambda)
+
+def test_in_place_policy_iteration_medium_negative_reward():
+    __medium_negative_reward_tester(in_place_policy_iteration_lambda)
+
+def test_in_place_policy_iteration_very_negative_reward():
+    __very_negative_reward_tester(in_place_policy_iteration_lambda)

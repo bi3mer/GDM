@@ -5,9 +5,11 @@ from math import inf
 from .Graph import Graph, Node
 
 def expected_utility_sum(g: Graph, n: str, n_p: str) -> float:
+    # TODO: delete
     return sum(p_p*g.get_node(p_n).utility for p_n, p_p in g.get_edge(n, n_p).probability)
 
 def max_expected_utility_sum(g: Graph, n: str) -> float:
+    # TODO: delete
     return max(expected_utility_sum(g, n, n_p) for n_p in g.neighbors(n))
 
 # def calculate_utility(g: Graph, src: Node, gamma: float):
@@ -18,7 +20,7 @@ def max_expected_utility_sum(g: Graph, n: str) -> float:
 #     return R + gamma*max(sum(neighbor_u(n_p)) for n_p in g.neighbors(N))
 
 def calculate_utility(G: Graph, n: Node, gamma: float) -> float:
-
+    # TODO: make this concatenation
     vals = []
     for n_p in G.neighbors(n.name):
         Q = []
@@ -50,7 +52,6 @@ def create_policy_from_utility(G: Graph, gamma: float) -> Dict[str, str]:
 
         for n_p in G.neighbors(n):
             u = calculate_utility(G, G.get_node(n_p), gamma)
-            # u = G.get_node(n_p).utility
             if u > best_u:
                 best_u = u
                 best_n = n_p
