@@ -1,6 +1,6 @@
 from typing import Dict
 
-from ..utility import reset_utility, create_policy_from_utility, calculate_utility, max_expected_utility_sum
+from ..utility import reset_utility, create_policy_from_utility, calculate_max_utility
 from ..Graph import Graph
 
 def __in_place_value_iteration(G: Graph, max_iteration: int, gamma: float, theta: float):
@@ -12,7 +12,7 @@ def __in_place_value_iteration(G: Graph, max_iteration: int, gamma: float, theta
             if node.is_terminal:
                 continue
 
-            u = calculate_utility(G, node, gamma)
+            u = node.reward + gamma * calculate_max_utility(G, n)
             delta = max(delta, abs(node.utility - u))
             
             node.utility = u
@@ -31,7 +31,7 @@ def __value_iteration(G: Graph, max_iteration: int, gamma: float, theta: float):
                 continue
             
             # u = node.reward + gamma * max_expected_utility_sum(G, n)
-            u = calculate_utility(G, node, gamma)
+            u = node.reward + gamma * calculate_max_utility(G, n)
             delta = max(delta, abs(node.utility - u))
 
             u_temp[n] = u

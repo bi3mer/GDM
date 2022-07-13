@@ -2,36 +2,13 @@ from typing import Dict, List, Tuple
 from random import choice, random
 from math import inf
 
-from .Graph import Graph, Node
+from .Graph import Graph
 
-def expected_utility_sum(g: Graph, n: str, n_p: str) -> float:
-    # TODO: delete
-    return sum(p_p*g.get_node(p_n).utility for p_n, p_p in g.get_edge(n, n_p).probability)
+def calculate_utility(G: Graph, src: str, tgt: str) -> float:
+    return sum(prob * (G.utility(n_tgt) + G.reward(n_tgt)) for n_tgt, prob in G.get_edge(src, tgt).probability)
 
-def max_expected_utility_sum(g: Graph, n: str) -> float:
-    # TODO: delete
-    return max(expected_utility_sum(g, n, n_p) for n_p in g.neighbors(n))
-
-# def calculate_utility(g: Graph, src: Node, gamma: float):
-#     R = src.reward
-#     N = src.name
-#     calc_u = lambda prob, n_tgt: prob*g.get_node(n_tgt).reward
-#     neighbor_u = lambda n_p: [calc_u(prob, n_tgt) for n_tgt, prob in g.get_edge(N, n_p).probability]
-#     return R + gamma*max(sum(neighbor_u(n_p)) for n_p in g.neighbors(N))
-
-def calculate_utility(G: Graph, n: Node, gamma: float) -> float:
-    # TODO: make this concatenation
-    vals = []
-    for n_p in G.neighbors(n.name):
-        Q = []
-        for n_tgt, prob in G.get_edge(n.name, n_p).probability:
-            node = G.get_node(n_tgt)
-            Q.append(prob * (node.reward + node.utility))
-
-        vals.append(sum(Q))
-
-    return n.reward + gamma*max(vals)
-    # return max(vals)
+def calculate_max_utility(G: Graph, n: str) -> float:
+    return max(calculate_utility(G, n, n_p) for n_p in G.neighbors(n))
 
 def reset_utility(G: Graph):
     for n in G.nodes:
@@ -51,7 +28,7 @@ def create_policy_from_utility(G: Graph, gamma: float) -> Dict[str, str]:
         best_n: str
 
         for n_p in G.neighbors(n):
-            u = calculate_utility(G, G.get_node(n_p), gamma)
+            u = G.reward(n_p) + gamma * calculate_max_utility(G, n_p)
             if u > best_u:
                 best_u = u
                 best_n = n_p
