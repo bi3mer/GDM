@@ -1,6 +1,6 @@
 #  Graph-based Decision Making (GDM)
 
-The goal of this library is to provide out of the box active and passive reinforcement learning algorithms that are easy to use. The work on your part is to define your problem as a [Graph](./GDM/Graph/Graph.py) and the library takes care of the rest. The use of a graph, rather than the classic [MDP](https://en.wikipedia.org/wiki/Markov_decision_process) formulation of `S,A,R,P`, is to more easily accommodate problems where the list of possible actions is large and varied possible states. The graph ends up being a more convenient structure, in my opinion.
+The goal of this library is to provide out of the box passive reinforcement learning algorithms that are easy to use. The work on your part is to define your problem as a [Graph](./GDM/Graph/Graph.py) and the library takes care of the rest. The use of a graph, rather than the classic [MDP](https://en.wikipedia.org/wiki/Markov_decision_process) formulation of `S,A,R,P`, is to more easily accommodate problems where the list of possible actions is large and varied possible states. The graph ends up being a more convenient structure, in my opinion.
 
 ## Examples and Tests
 

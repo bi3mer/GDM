@@ -1,97 +1,96 @@
-from GDM.ActiveRL import DUE
-from GDM import PassiveRL
-from GDM.Graph import Graph
-from GDM.utility import *
+# from GDM import RL
+# from GDM.Graph import Graph
+# from GDM.utility import *
 
-from random import seed
+# from random import seed
 
-def __build_grid_world(MAX_X, MAX_Y):
-    g = Graph() 
+# def __build_grid_world(MAX_X, MAX_Y):
+#     g = Graph() 
 
-    # create nodes
-    for y in range(MAX_Y):
-        for x in range(MAX_X):
-            # ignore the blank position
-            if y == 1 and x == 1:
-                continue
+#     # create nodes
+#     for y in range(MAX_Y):
+#         for x in range(MAX_X):
+#             # ignore the blank position
+#             if y == 1 and x == 1:
+#                 continue
 
-            # create node and its reward
-            src = f'{y}_{x}'
-            if x == MAX_X - 1 and y == MAX_Y - 1:
-                g.add_default_node(src, reward=1, terminal=True)
-            elif x == MAX_X - 1 and y == MAX_Y - 2:
-                g.add_default_node(src, reward=-1.0, terminal=True)
-            else:
-                g.add_default_node(src, reward=-0.04)
+#             # create node and its reward
+#             src = f'{y}_{x}'
+#             if x == MAX_X - 1 and y == MAX_Y - 1:
+#                 g.add_default_node(src, reward=1, terminal=True)
+#             elif x == MAX_X - 1 and y == MAX_Y - 2:
+#                 g.add_default_node(src, reward=-1.0, terminal=True)
+#             else:
+#                 g.add_default_node(src, reward=-0.04)
 
-    # create edges
-    for src in g.nodes:
-        # get name
-        y, x = [int(i) for i in src.split('_')]
+#     # create edges
+#     for src in g.nodes:
+#         # get name
+#         y, x = [int(i) for i in src.split('_')]
 
-        # create left connection
-        if x - 1 >= 0 and not (x - 1 == 1 and y == 1):
-            tgt = f'{y}_{x-1}'
-            g.add_default_edge(src, tgt, [(tgt, 1.0)])
+#         # create left connection
+#         if x - 1 >= 0 and not (x - 1 == 1 and y == 1):
+#             tgt = f'{y}_{x-1}'
+#             g.add_default_edge(src, tgt, [(tgt, 1.0)])
 
-        # create right connection
-        if x + 1 < MAX_X and not (x + 1 == 1 and y == 1):
-            tgt = f'{y}_{x+1}'
-            g.add_default_edge(src, tgt, [(tgt, 1.0)])
+#         # create right connection
+#         if x + 1 < MAX_X and not (x + 1 == 1 and y == 1):
+#             tgt = f'{y}_{x+1}'
+#             g.add_default_edge(src, tgt, [(tgt, 1.0)])
 
-        # create up connection
-        if y - 1 >= 0 and not (x == 1 and y - 1 == 1):
-            tgt = f'{y-1}_{x}'
-            g.add_default_edge(src, tgt, [(tgt, 1.0)])
+#         # create up connection
+#         if y - 1 >= 0 and not (x == 1 and y - 1 == 1):
+#             tgt = f'{y-1}_{x}'
+#             g.add_default_edge(src, tgt, [(tgt, 1.0)])
 
-        # create down connection
-        if y + 1 < MAX_Y and not (x == 1 and y + 1 == 1):
-            tgt = f'{y+1}_{x}'
-            g.add_default_edge(src, tgt, [(tgt, 1.0)])
+#         # create down connection
+#         if y + 1 < MAX_Y and not (x == 1 and y + 1 == 1):
+#             tgt = f'{y+1}_{x}'
+#             g.add_default_edge(src, tgt, [(tgt, 1.0)])
 
-    return '0_0', g
+#     return '0_0', g
 
-def __display_utility_table(G, MAX_X, MAX_Y):
-    print()
-    print('--------' * MAX_X + '-')
-    for y in reversed(range(MAX_Y)):
-        out = '| '
-        for x in range(MAX_X):
-            if x == 1 and y == 1:
-                out += '      |'
-            else:
-                key = f'{y}_{x}'
-                out +=  '{:.2f} | '.format(G.get_node(key).utility)
+# def __display_utility_table(G, MAX_X, MAX_Y):
+#     print()
+#     print('--------' * MAX_X + '-')
+#     for y in reversed(range(MAX_Y)):
+#         out = '| '
+#         for x in range(MAX_X):
+#             if x == 1 and y == 1:
+#                 out += '      |'
+#             else:
+#                 key = f'{y}_{x}'
+#                 out +=  '{:.2f} | '.format(G.get_node(key).utility)
         
-        print(out)
-        print('--------' * MAX_X + '-')
+#         print(out)
+#         print('--------' * MAX_X + '-')
 
-def test_policy_iteration():
-    seed(0)
-    start, G = __build_grid_world(5, 5)
-    pi = PassiveRL.policy_iteration(G, 0.6)
-    assert pi != None
-    states, rewards = run_policy(G, start, pi, 30)
+# def test_policy_iteration():
+#     seed(0)
+#     start, G = __build_grid_world(5, 5)
+#     pi = RL.policy_iteration(G, 0.6)
+#     assert pi != None
+#     states, rewards = run_policy(G, start, pi, 30)
 
-    assert rewards[-1] == 1
-    assert len(states) == 9
-    assert len(rewards) == 9
-    assert states[-1] == '4_4'
+#     assert rewards[-1] == 1
+#     assert len(states) == 9
+#     assert len(rewards) == 9
+#     assert states[-1] == '4_4'
 
-def test_in_place_policy_iteration():
-    start, G = __build_grid_world(20, 20)
-    pi = PassiveRL.policy_iteration(G, 0.5, in_place=True)
-    assert pi != None
-    states, rewards = run_policy(G, start, pi,100)
-    assert rewards[-1] == 1
-    assert len(states) == 39
-    assert len(rewards) == 39
-    assert states[-1] == '19_19'
+# def test_in_place_policy_iteration():
+#     start, G = __build_grid_world(20, 20)
+#     pi = RL.policy_iteration(G, 0.5, in_place=True)
+#     assert pi != None
+#     states, rewards = run_policy(G, start, pi,100)
+#     assert rewards[-1] == 1
+#     assert len(states) == 39
+#     assert len(rewards) == 39
+#     assert states[-1] == '19_19'
 
 # def test_modified_policy_iteration():
 #     seed(0)
 #     start, G = __build_grid_world(30, 30)
-#     pi = PassiveRL.policy_iteration(G, 0.7, modified=True)
+#     pi = RL.policy_iteration(G, 0.7, modified=True)
 #     assert pi != None
 #     states, rewards = run_policy(G, start, pi, 100)
 #     assert rewards[-1] == 1
@@ -101,7 +100,7 @@ def test_in_place_policy_iteration():
 
 # def test_modified_in_place_policy_iteration():
 #     start, G = __build_grid_world(15, 15)
-#     pi = PassiveRL.policy_iteration(G, 0.9, modified=True, in_place=True)
+#     pi = RL.policy_iteration(G, 0.9, modified=True, in_place=True)
 #     assert pi != None
 #     states, rewards = run_policy(G, start, pi, 100)
 #     assert rewards[-1] == 1
@@ -109,47 +108,28 @@ def test_in_place_policy_iteration():
 #     assert len(states) ==  len(rewards)
 #     assert states[-1] == '14_14'
 
-def test_value_iteration():
-    seed(0)
-    start, G = __build_grid_world(5, 10)
-    # start, G = __build_grid_world(4, 3)
-    # temp = calculate_utility(G, G.get_node('2_2'), 0.8)
-    pi = PassiveRL.value_iteration(G, 100, 0.8, 1e-13, in_place=False)
-    assert pi != None
-    # __display_utility_table(G, 4, 3)
+# def test_value_iteration():
+#     seed(0)
+#     start, G = __build_grid_world(5, 10)
+#     # start, G = __build_grid_world(4, 3)
+#     # temp = calculate_utility(G, G.get_node('2_2'), 0.8)
+#     pi = RL.value_iteration(G, 100, 0.8, 1e-13, in_place=False)
+#     assert pi != None
+#     # __display_utility_table(G, 4, 3)
 
-    states, rewards = run_policy(G, start, pi, 100)
-    assert rewards[-1] == 1
-    assert len(states) == 14
-    assert len(states) == len(rewards)
-    assert states[-1] == '9_4'
+#     states, rewards = run_policy(G, start, pi, 100)
+#     assert rewards[-1] == 1
+#     assert len(states) == 14
+#     assert len(states) == len(rewards)
+#     assert states[-1] == '9_4'
 
-def test_in_place_value_iteration():
-    seed(0)
-    start, G = __build_grid_world(8, 10)
-    pi = PassiveRL.value_iteration(G, 100, 0.8, 1e-13, in_place=True)
-    assert pi != None
-    states, rewards = run_policy(G, start, pi, 100)
-    assert rewards[-1] == 1
-    assert len(states) == 17
-    assert len(rewards) == 17
-    assert states[-1] == '9_7'
-
-def test_direct_utility_estimation():
-    MAX_STEPS = 50
-    GAMMA = 0.9
-    EPSILON = 0.2 
-    seed(0)
-
-    start, G = __build_grid_world(5, 4)
-    pi = create_policy_from_utility(G, GAMMA)
-    for _ in range(500):
-        states, rewards = run_epsilon_greedy_utility_policy(G, start, pi, EPSILON, MAX_STEPS)
-        pi = DUE.direct_utility_estimation(G, GAMMA, states, rewards)
-
-    states, rewards = run_policy(G, start, pi, MAX_STEPS)
-    
-    assert rewards[-1] == 1 or rewards[-1] == -1
-    assert len(states) == 8
-    assert len(states) == len(rewards)
-    assert states[-1] == '3_4'
+# def test_in_place_value_iteration():
+#     seed(0)
+#     start, G = __build_grid_world(8, 10)
+#     pi = RL.value_iteration(G, 100, 0.8, 1e-13, in_place=True)
+#     assert pi != None
+#     states, rewards = run_policy(G, start, pi, 100)
+#     assert rewards[-1] == 1
+#     assert len(states) == 17
+#     assert len(rewards) == 17
+#     assert states[-1] == '9_7'

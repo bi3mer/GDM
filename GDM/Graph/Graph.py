@@ -1,11 +1,11 @@
-from typing import Set, Dict
+from typing import Callable, Set, Dict, List, Tuple
 from .Edge import Edge
 from .Node import Node
 
 class Graph:
     def __init__(self):
-        self.nodes: dict[str, Node] = {}
-        self.edges: dict[str, Edge] = {}
+        self.nodes: Dict[str, Node] = {}
+        self.edges: Dict[str, Edge] = {}
 
     ##### Node Operations
     def get_node(self, node_name: str) -> Node:
@@ -41,14 +41,11 @@ class Graph:
         if edge.tgt not in neighbors:
             neighbors.add(edge.tgt)
 
-    def add_default_edge(self, src_name: str, tgt_name: str, p: Dict[str, float]={}):
-        assert src_name in self.nodes
-        assert tgt_name in self.nodes
-        self.edges[(src_name, tgt_name)] = Edge(src_name, tgt_name, p)
+    def add_default_edge(self, src_name: str, tgt_name: str, p: List[Tuple[str, float]]=None):
+        if p == None:
+            p = []
 
-        neighbors = self.nodes[src_name].neighbors
-        if tgt_name not in neighbors:
-            neighbors.add(tgt_name)
+        self.add_edge(Edge(src_name, tgt_name, p))
 
     def remove_edge(self, src_node, tgt_node):
         del self.edges[(src_node, tgt_node)]
@@ -66,3 +63,7 @@ class Graph:
 
     def reward(self, node_name: str) -> float:
         return self.nodes[node_name].reward
+
+    def map_nodes(self, func: Callable[[Node], None]):
+        for n in self.nodes.values():
+            func(n)

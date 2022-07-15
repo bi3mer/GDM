@@ -6,7 +6,7 @@ setup(
     description='Graph-based sequential decision making (GDSM) is a simple library for MDP and model-free methods using networkx.',
     author='Colan Biemer',
     license='MIT',
-    install_requires=['networkx'],
+    install_requires=[],
     setup_requires=['pytest-runner'],
     tests_require=['pytest'],
     test_suite='Tests',

@@ -1,4 +1,4 @@
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Set
 
 @dataclass
@@ -8,7 +8,3 @@ class Node:
     utility: float
     is_terminal: bool
     neighbors: Set[str]
-
-    # direct utility estimation
-    reward_sum: int = 0
-    times_visited: int = 0
