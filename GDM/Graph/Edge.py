@@ -6,3 +6,4 @@ class Edge:
     src: str
     tgt: str
     probability: List[Tuple[str, float]]
+    # q: float = 0

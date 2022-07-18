@@ -4,21 +4,19 @@ from ..utility import reset_utility, create_policy_from_utility, calculate_max_u
 from ..Graph import Graph
 
 def __in_place_value_iteration(G: Graph, max_iteration: int, gamma: float, theta: float):
-    for _ in range(max_iteration):
+    for k in range(max_iteration):
         delta = 0
 
         for n in G.nodes:
             node = G.get_node(n)
-            if node.is_terminal:
-                continue
-
-            u = node.reward + gamma * calculate_max_utility(G, n)
+            u = calculate_max_utility(G, n, gamma)
             delta = max(delta, abs(node.utility - u))
-            
             node.utility = u
 
         if delta < theta:
             break
+    
+    print(f'{k} iterations to converge.')
 
 def __value_iteration(G: Graph, max_iteration: int, gamma: float, theta: float):
     for _ in range(max_iteration):
@@ -26,14 +24,8 @@ def __value_iteration(G: Graph, max_iteration: int, gamma: float, theta: float):
         u_temp: Dict[str, float] = {}
 
         for n in G.nodes:
-            node = G.get_node(n)
-            if node.is_terminal:
-                continue
-            
-            # u = node.reward + gamma * max_expected_utility_sum(G, n)
-            u = node.reward + gamma * calculate_max_utility(G, n)
-            delta = max(delta, abs(node.utility - u))
-
+            u = calculate_max_utility(G, n, gamma)
+            delta = max(delta, abs(G.utility(n) - u))
             u_temp[n] = u
         
         G.set_node_utilities(u_temp)

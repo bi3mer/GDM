@@ -13,38 +13,29 @@ def __modified_in_place_policy_evaluation(G: Graph, pi: Dict[str, str], gamma: f
             if node.is_terminal:
                 continue
 
-            G.nodes[n].utility = node.reward + gamma * calculate_utility(G, n, pi[n])
+            node.utility = calculate_utility(G, n, pi[n], gamma)
 
 def __modified_policy_evaluation(G: Graph, pi: Dict[str, str], gamma: float, policy_k: int):
     for __ in range(policy_k):
         u_temp: Dict[str, float] = {}
         for n in G.nodes:
-            node = G.get_node(n)
-            if node.is_terminal:
+            if G.get_node(n).is_terminal:
                 continue
-
-            u_temp[n] = node.reward + gamma * calculate_utility(G, n, pi[n])
+            
+            u_temp[n] = calculate_utility(G, n, pi[n], gamma)
         
         G.set_node_utilities(u_temp)
 
 def __in_place_policy_evaluation(G: Graph, _, gamma: float, policy_k: int):
     for __ in range(policy_k):
         for n in G.nodes:
-            node = G.get_node(n)
-            if node.is_terminal:
-                continue
-
-            G.get_node(n).utility = node.reward + gamma * calculate_max_utility(G, n)
+            G.get_node(n).utility = calculate_max_utility(G, n, gamma)
 
 def __policy_evaluation(G: Graph, _, gamma: float, policy_k: int):
     for __ in range(policy_k):
         u_temp: Dict[str, float] = {}
         for n in G.nodes:
-            node = G.get_node(n)
-            if node.is_terminal:
-                continue
-
-            u_temp[n] = node.reward + gamma * calculate_max_utility(G, n)
+            u_temp[n] = calculate_max_utility(G, n, gamma)
 
         G.set_node_utilities(u_temp)
 
@@ -58,7 +49,7 @@ def __policy_improvement(G: Graph, pi: Dict[str, str], gamma: float) -> bool:
         best_s = None
         best_u = -inf
         for n_p in G.neighbors(n):
-            u_p = calculate_utility(G, n, n_p)
+            u_p = calculate_utility(G, n, n_p, gamma)
 
             if u_p > best_u:
                 best_s = n_p

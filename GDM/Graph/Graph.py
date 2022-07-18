@@ -35,6 +35,7 @@ class Graph:
     def add_edge(self, edge: Edge):
         assert edge.src in self.nodes
         assert edge.tgt in self.nodes
+        # assert (edge.src, edge.tgt) not in self.edges
         self.edges[(edge.src, edge.tgt)] = edge
         
         neighbors = self.nodes[edge.src].neighbors
