@@ -33,8 +33,8 @@ class Graph:
         return self.edges[(src_name, tgt_name)]
 
     def add_edge(self, edge: Edge):
-        assert edge.src in self.nodes
-        assert edge.tgt in self.nodes
+        # assert edge.src in self.nodes
+        # assert edge.tgt in self.nodes
         # assert (edge.src, edge.tgt) not in self.edges
         self.edges[(edge.src, edge.tgt)] = edge
         
@@ -64,6 +64,9 @@ class Graph:
 
     def reward(self, node_name: str) -> float:
         return self.nodes[node_name].reward
+
+    def is_terminal(self, node_name: str) -> bool:
+        return self.nodes[node_name].is_terminal
 
     def map_nodes(self, func: Callable[[Node], None]):
         for n in self.nodes.values():

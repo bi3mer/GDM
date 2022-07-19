@@ -7,7 +7,7 @@ from .Graph import Graph
 def calculate_utility(G: Graph, src: str, tgt: str, gamma: float) -> float:
     return sum(prob * (G.reward(n_tgt) + gamma*G.utility(n_tgt)) for n_tgt, prob in G.get_edge(src, tgt).probability)
 
-def calculate_max_utility(G: Graph, n: str, gamma: float) -> float:
+def calculate_max_utility(G: Graph, n: str, gamma: float) -> List[Tuple[str, float]]:
     node = G.get_node(n)
     if node.is_terminal:
         return 0
@@ -26,7 +26,7 @@ def create_random_policy(G: Graph) -> Dict[str, str]:
 
     return pi
 
-def create_policy_from_utility(G: Graph, gamma: float, maximize: bool=True) -> Dict[str, str]:
+def create_policy(G: Graph, gamma: float, maximize: bool=True) -> Dict[str, str]:
     pi: Dict[str, str] = {}
     for n in G.nodes:
         if G.get_node(n).is_terminal:
@@ -39,7 +39,7 @@ def create_policy_from_utility(G: Graph, gamma: float, maximize: bool=True) -> D
             u = calculate_utility(G, n, n_p, gamma)
             if not maximize:
                 u *= -1
-                
+            
             if u > best_u:
                 best_u = u
                 best_n = n_p

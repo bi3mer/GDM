@@ -1,6 +1,6 @@
 from typing import Dict
 
-from ..utility import reset_utility, create_policy_from_utility, calculate_max_utility
+from ..utility import reset_utility, create_policy, calculate_max_utility
 from ..Graph import Graph
 
 def __in_place_value_iteration(G: Graph, max_iteration: int, gamma: float, theta: float):
@@ -13,9 +13,10 @@ def __in_place_value_iteration(G: Graph, max_iteration: int, gamma: float, theta
             delta = max(delta, abs(node.utility - u))
             node.utility = u
 
+        print(f'delta={delta}')
         if delta < theta:
             break
-    
+            
     print(f'{k} iterations to converge.')
 
 def __value_iteration(G: Graph, max_iteration: int, gamma: float, theta: float):
@@ -33,8 +34,10 @@ def __value_iteration(G: Graph, max_iteration: int, gamma: float, theta: float):
         if delta < theta:
             break
 
-def value_iteration(G: Graph, max_iteration: int, gamma: float, theta: float, 
-                    in_place: bool=False, should_reset_utility: bool=True) -> Dict[str, str]:
+def value_iteration(
+        G: Graph, max_iteration: int, gamma: float, theta: float, 
+        in_place: bool=False, should_reset_utility: bool=True) -> Dict[str, str]:
+            
     if should_reset_utility:
         reset_utility(G)
 
@@ -43,5 +46,5 @@ def value_iteration(G: Graph, max_iteration: int, gamma: float, theta: float,
     else:
         __value_iteration(G, max_iteration, gamma, theta)
 
-    return create_policy_from_utility(G, gamma)
+    return create_policy(G, gamma)
 
