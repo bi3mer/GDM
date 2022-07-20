@@ -73,6 +73,9 @@ def __build_grid_world(reward: float):
 
         sub_probability = 0.2 / (len(valid_targets)-1)
         for tgt in valid_targets:
+            if g.has_edge(src, tgt):
+                continue
+
             p = []
             tgt_not_used = True
             for p_tgt in valid_targets:

@@ -21,6 +21,7 @@ def reset_utility(G: Graph):
 def create_random_policy(G: Graph) -> Dict[str, str]:
     pi: dict[str, str] = {} 
     for n in G.nodes:
+        print(n)
         if not G.get_node(n).is_terminal:
             pi[n] = choice(list(G.neighbors(n)))
 

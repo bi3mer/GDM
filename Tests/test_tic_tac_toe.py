@@ -58,9 +58,10 @@ def __build_opposing_policy(G: Graph, queue: List[Tuple[str]], update_r):
         actions = G.neighbors(cur) # Possible moves for the agent
         for tgt_state in actions:
             tgt_node = G.get_node(tgt_state)
-            if tgt_state not in G_.nodes:
+            if not G_.has_node(tgt_state):
                 G_.add_default_node(tgt_state, reward=update_r(tgt_node.reward), terminal=tgt_node.is_terminal)
-            G_.add_default_edge(cur, tgt_state, [(tgt_state, 1.0)])
+            if not G_.has_edge(cur, tgt_state):
+                G_.add_default_edge(cur, tgt_state, [(tgt_state, 1.0)])
 
             if tgt_node.is_terminal:
                 continue
@@ -75,9 +76,12 @@ def __build_opposing_policy(G: Graph, queue: List[Tuple[str]], update_r):
                 s_p_node = G.get_node(s_p)
                 if s_p_node.is_terminal:
                     found_terminal = True
-                    if s_p not in G_.nodes:
+                    if not G_.has_node(s_p):
                         G_.add_default_node(s_p, reward=update_r(s_p_node.reward), terminal=True)
-                    G_.add_default_edge(tgt_state, s_p, [(s_p, 1.0)])
+
+                    if not G_.has_edge(tgt_state, s_p):
+                        G_.add_default_edge(tgt_state, s_p, [(s_p, 1.0)])
+    
                     break
             
             if found_terminal:
@@ -86,10 +90,12 @@ def __build_opposing_policy(G: Graph, queue: List[Tuple[str]], update_r):
             # otherwise, the player is random
             for s_p in potential_states:
                 s_p_node = G.get_node(s_p)
-                if s_p not in G_.nodes:
+                if not G_.has_node(s_p):
                     G_.add_default_node(s_p, reward=update_r(s_p_node.reward), terminal=s_p_node.is_terminal)
-                
-                G_.add_default_edge(tgt_state, s_p, [(s_p_p, likelihood) for s_p_p in potential_states])
+
+                if not G_.has_edge(tgt_state, s_p):
+                    G_.add_default_edge(tgt_state, s_p, [(s_p_p, likelihood) for s_p_p in potential_states])
+    
                 if not s_p_node.is_terminal:
                     queue.append(s_p)
     

@@ -11,6 +11,9 @@ class Graph:
     def get_node(self, node_name: str) -> Node:
         return self.nodes[node_name]
 
+    def has_node(self, node_name: str) -> bool:
+        return node_name in self.nodes
+
     def add_node(self, node: Node):
         assert isinstance(node, Node)
         assert node.name not in self.nodes
@@ -26,17 +29,24 @@ class Graph:
         self.nodes[node_name] = Node(node_name, reward, utility, terminal, neighbors)
 
     def remove_node(self, node_name: str):
+        assert node_name in self.nodes
+        for neighbor in self.nodes[node_name].neighbors:
+            self.remove_edge(node_name, neighbor)
+
         del self.nodes[node_name]
 
     ##### Edge Operations
     def get_edge(self, src_name: str, tgt_name: str) -> Edge:
         return self.edges[(src_name, tgt_name)]
 
+    def has_edge(self, src_name: str, tgt_name: str) -> bool:
+        return (src_name, tgt_name) in self.edges
+
     def add_edge(self, edge: Edge):
         assert isinstance(edge, Edge)
         assert edge.src in self.nodes
         assert edge.tgt in self.nodes
-        # assert (edge.src, edge.tgt) not in self.edges
+        assert (edge.src, edge.tgt) not in self.edges
         self.edges[(edge.src, edge.tgt)] = edge
         
         neighbors = self.nodes[edge.src].neighbors
@@ -49,7 +59,11 @@ class Graph:
 
         self.add_edge(Edge(src_name, tgt_name, p))
 
-    def remove_edge(self, src_node, tgt_node):
+    def remove_edge(self, src_node: str, tgt_node: str):
+        assert src_node in self.nodes
+        assert tgt_node in self.nodes
+        assert (src_node, tgt_node) in self.edges
+
         del self.edges[(src_node, tgt_node)]
 
     ##### Useful Functions

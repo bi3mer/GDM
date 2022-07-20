@@ -37,12 +37,24 @@ def test_remove_node():
     G = Graph()
     G.add_default_node('2')
 
-    with pytest.raises(KeyError):
+    with pytest.raises(AssertionError):
         G.remove_node('1')
 
     G.remove_node('2')
     assert '2' not in G.nodes
     assert len(G.nodes) == 0
+
+    G.add_default_node('1')
+    for i in range(2, 20):
+        G.add_default_node(str(i))
+        G.add_default_edge('1', str(i))
+
+    assert len(G.nodes) == 19
+    assert len(G.edges) == 18
+
+    G.remove_node('1')
+    assert len(G.nodes) == 18
+    assert len(G.edges) == 0
 
 def test_get_edge():
     G = Graph()
