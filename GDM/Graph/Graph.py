@@ -12,7 +12,7 @@ class Graph:
         return self.nodes[node_name]
 
     def add_node(self, node: Node):
-        assert isinstance(node) == Node
+        assert isinstance(node, Node)
         assert node.name not in self.nodes
         self.nodes[node.name] = node
 
@@ -33,8 +33,9 @@ class Graph:
         return self.edges[(src_name, tgt_name)]
 
     def add_edge(self, edge: Edge):
-        # assert edge.src in self.nodes
-        # assert edge.tgt in self.nodes
+        assert isinstance(edge, Edge)
+        assert edge.src in self.nodes
+        assert edge.tgt in self.nodes
         # assert (edge.src, edge.tgt) not in self.edges
         self.edges[(edge.src, edge.tgt)] = edge
         

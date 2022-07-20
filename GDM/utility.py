@@ -26,7 +26,7 @@ def create_random_policy(G: Graph) -> Dict[str, str]:
 
     return pi
 
-def create_policy(G: Graph, gamma: float, maximize: bool=True) -> Dict[str, str]:
+def create_policy(G: Graph, gamma: float) -> Dict[str, str]:
     pi: Dict[str, str] = {}
     for n in G.nodes:
         if G.get_node(n).is_terminal:
@@ -37,8 +37,6 @@ def create_policy(G: Graph, gamma: float, maximize: bool=True) -> Dict[str, str]
 
         for n_p in G.neighbors(n):
             u = calculate_utility(G, n, n_p, gamma)
-            if not maximize:
-                u *= -1
             
             if u > best_u:
                 best_u = u
