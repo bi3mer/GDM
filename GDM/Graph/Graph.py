@@ -58,9 +58,6 @@ class Graph:
         for e in edges_to_remove:
             self.remove_edge(e.src, e.tgt)
 
-        for neighbor in self.nodes[node_name].neighbors:
-            self.remove_edge(node_name, neighbor)
-
         del self.nodes[node_name]
 
     ##### Edge Operations
