@@ -33,7 +33,7 @@ def test_add_node():
     G.add_node(TestNode('2', 1.0, 2.0, True, set(), 12))
     assert G.get_node('2').test == 12
 
-def test_remove_node():
+def test_remove_node_simple_case():
     G = Graph()
     G.add_default_node('2')
 
@@ -44,6 +44,8 @@ def test_remove_node():
     assert '2' not in G.nodes
     assert len(G.nodes) == 0
 
+def test_remove_node_outgoing_edges():
+    G = Graph()
     G.add_default_node('1')
     for i in range(2, 20):
         G.add_default_node(str(i))
@@ -51,10 +53,43 @@ def test_remove_node():
 
     assert len(G.nodes) == 19
     assert len(G.edges) == 18
-
+    
     G.remove_node('1')
     assert len(G.nodes) == 18
     assert len(G.edges) == 0
+
+def test_remove_node_incoming_edges():
+    G = Graph()
+    G.add_default_node('1')
+    for i in range(2, 20):
+        G.add_default_node(str(i))
+        G.add_default_edge('1', str(i))
+
+    for i in range(2, 20):
+        G.add_default_edge(str(i), '1')
+    
+    G.remove_node('1')
+    assert len(G.edges) == 0
+    for i in range(2, 20):
+        assert len(G.neighbors(str(i))) == 0
+
+def test_remove_noce_edge_probabilities():
+    G = Graph()
+    G.add_default_node('1')
+    G.add_default_node('2')
+    G.add_default_node('3')
+    G.add_default_node('4')
+
+    G.add_default_edge('1', '2', [('2', 0.5), ('3', 0.25), ('4', 0.25)])
+
+    G.remove_node('4')
+
+    assert '2' in G.neighbors('1')
+    assert '4' not in G.neighbors('1')
+
+    edge = G.get_edge('1', '2')
+    assert ('2', 0.625) in edge.probability
+    assert ('3', 0.375) in edge.probability
 
 def test_get_edge():
     G = Graph()
@@ -85,6 +120,8 @@ def test_custom_edge():
 
 
 def test_remove_edge():
+    print('remove_edge needs to remove tgt_node from src_node\'s neighbors.')
+
     G = Graph()
     G.add_default_node('a')
     G.add_default_node('b')
@@ -93,6 +130,8 @@ def test_remove_edge():
     
     G.remove_edge('a', 'b')
     assert len(G.edges) == 0
+    assert len(G.neighbors('a')) == 0
+    assert len(G.neighbors('b')) == 0
 
 def test_neighbors():
     G = Graph()
@@ -143,13 +182,3 @@ def test_map_nodes():
         key = str(i)
         assert G.reward(key) == 10
         assert G.is_terminal(key) == True
-
-# def reward(self, node_name: str) -> float:
-#     return self.nodes[node_name].reward
-
-# def is_terminal(self, node_name: str) -> bool:
-#     return self.nodes[node_name].is_terminal
-
-# def map_nodes(self, func: Callable[[Node], None]):
-#     for n in self.nodes.values():
-#         func(n)

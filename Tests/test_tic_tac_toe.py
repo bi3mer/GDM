@@ -1,12 +1,3 @@
-#TODO: I haven't figured out where I'm going wrong with tic-tac-toe yet. I know its related
-# to it being a two-player game which means the MDP has to be different. I thought a policy
-# that minimizes the MDP that creates the X policy would work but it doesn't. SO either I have
-# a bug that I have not yet found or my understanding is wrong. 
-
-# For now, I'm going to move onto the gambler's ruin problem and come back to this at a later
-# date when I ahe some more time.
-
-from turtle import update
 from GDM.Graph import Graph
 from GDM.utility import *
 from GDM import ADP

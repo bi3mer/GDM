@@ -30,6 +30,34 @@ class Graph:
 
     def remove_node(self, node_name: str):
         assert node_name in self.nodes
+
+        edges_to_remove: List[Edge] = []
+        for e in self.edges.values():
+            # add to list to remove from edges
+            if e.src == node_name or e.tgt == node_name:
+                edges_to_remove.append(e)
+
+            # check if node occurs in the probabilities array
+            probabilities = e.probability
+            index = -1
+            for i, (name, _) in enumerate(probabilities):
+                if name == node_name:
+                    index = i
+                    break
+
+            if index == -1:
+                continue
+
+            # if it is in the array remove it and spread the probability to the
+            # other values in the probabilities array
+            p_value = probabilities[index][1]
+            probabilities.pop(index)
+            p_value /= len(probabilities)
+            e.probability = [(name, p + p_value) for name, p in probabilities]
+        
+        for e in edges_to_remove:
+            self.remove_edge(e.src, e.tgt)
+
         for neighbor in self.nodes[node_name].neighbors:
             self.remove_edge(node_name, neighbor)
 
@@ -64,6 +92,7 @@ class Graph:
         assert tgt_node in self.nodes
         assert (src_node, tgt_node) in self.edges
 
+        self.neighbors(src_node).remove(tgt_node)
         del self.edges[(src_node, tgt_node)]
 
     ##### Useful Functions
