@@ -6,7 +6,7 @@ The goal of this library is to provide and out of the box passive reinforcement 
 ## Install
 
 ```bash
-pip install git+https://github.com/bi3mer/GDM.git#egg=GDM
+python -m pip install git+https://github.com/bi3mer/GDM.git@main
 ```
 
 ## Examples
