@@ -182,3 +182,27 @@ def test_map_nodes():
         key = str(i)
         assert G.reward(key) == 10
         assert G.is_terminal(key) == True
+
+def test_map_edges():
+    @dataclass
+    class CustomEdge(Edge):
+        q: float = 0
+
+    G = Graph()
+    G.add_default_node('1')
+    G.add_default_node('2')
+    G.add_default_node('3')
+
+    G.add_edge(CustomEdge('1', '2', [('2', 1.0)]))
+    G.add_edge(CustomEdge('1', '3', [('3', 1.0)]))
+
+    edge: CustomEdge
+    for edge in G.edges.values():
+        assert edge.q == 0
+
+    def adjust_q_values(e: CustomEdge):
+        e.q = 10
+
+    G.map_edges(adjust_q_values)
+    for edge in G.edges.values():
+        edge.q = 10

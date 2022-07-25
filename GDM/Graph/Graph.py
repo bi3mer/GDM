@@ -1,3 +1,4 @@
+from ast import Call
 from typing import Callable, Set, Dict, List, Tuple
 from .Edge import Edge
 from .Node import Node
@@ -112,3 +113,7 @@ class Graph:
     def map_nodes(self, func: Callable[[Node], None]):
         for n in self.nodes.values():
             func(n)
+
+    def map_edges(self, func: Callable[[Edge], None]):
+        for e in self.edges.values():
+            func(e)
