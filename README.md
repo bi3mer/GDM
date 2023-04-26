@@ -5,8 +5,14 @@ The goal of this library is to provide and out of the box passive reinforcement 
 
 ## Install
 
+With pip:
 ```bash
 python -m pip install git+https://github.com/bi3mer/GDM.git@main
+```
+
+With pipenv
+```bash
+pipenv install -e git+https://github.com/bi3mer/GDM.git@main#egg=GDM
 ```
 
 ## Examples
