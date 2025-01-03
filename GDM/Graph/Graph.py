@@ -1,5 +1,6 @@
-from ast import Call
 from typing import Callable, Set, Dict, List, Tuple
+from json import dumps
+
 from .Edge import Edge
 from .Node import Node
 
@@ -20,7 +21,7 @@ class Graph:
         assert node.name not in self.nodes
         self.nodes[node.name] = node
 
-    def add_default_node(self, node_name: str, reward: float=1.0, utility: float=0.0, 
+    def add_default_node(self, node_name: str, reward: float=1.0, utility: float=0.0,
                          terminal: bool=False, neighbors: Set[str]=None):
 
         assert node_name not in self.nodes
@@ -55,7 +56,7 @@ class Graph:
             probabilities.pop(index)
             p_value /= len(probabilities)
             e.probability = [(name, p + p_value) for name, p in probabilities]
-        
+
         for e in edges_to_remove:
             self.remove_edge(e.src, e.tgt)
 
@@ -74,7 +75,7 @@ class Graph:
         assert edge.tgt in self.nodes
         assert (edge.src, edge.tgt) not in self.edges
         self.edges[(edge.src, edge.tgt)] = edge
-        
+
         neighbors = self.nodes[edge.src].neighbors
         if edge.tgt not in neighbors:
             neighbors.add(edge.tgt)
@@ -117,3 +118,9 @@ class Graph:
     def map_edges(self, func: Callable[[Edge], None]):
         for e in self.edges.values():
             func(e)
+
+    def to_json_string(self) -> str:
+        return dumps({
+            'nodes': [N.to_dictionary() for N in self.nodes.values()],
+            'edges': [E.to_dictionary() for E in self.edges.values()]
+        }, indent=2)
