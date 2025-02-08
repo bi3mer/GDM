@@ -94,15 +94,15 @@ def bfs(G: Graph, src: str, tgt: str) -> Tuple[bool, List[str]]:
             came_from[next] = cur
             queue.append(next)
 
-    if not path_found:
-        return (False, [])
+    if path_found:
+        path = []
+        cur = tgt
+        while cur != src:
+            path.append(cur)
+            cur = came_from[cur]
 
-    path = []
-    cur = tgt
-    while cur != src:
-        path.append(cur)
-        cur = came_from[cur]
+        return (False, path)
 
-    path.append(src)
+    print('here')
+    return (True, [])
 
-    return (True, path)
