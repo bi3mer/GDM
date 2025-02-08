@@ -19,7 +19,7 @@ def reset_utility(G: Graph):
         G.nodes[n].utility = 0
 
 def create_random_policy(G: Graph) -> Dict[str, str]:
-    pi: dict[str, str] = {} 
+    pi: dict[str, str] = {}
     for n in G.nodes:
         if not G.get_node(n).is_terminal:
             pi[n] = choice(list(G.neighbors(n)))
@@ -37,7 +37,7 @@ def create_policy(G: Graph, gamma: float) -> Dict[str, str]:
 
         for n_p in G.neighbors(n):
             u = calculate_utility(G, n, n_p, gamma)
-            
+
             if u > best_u:
                 best_u = u
                 best_n = n_p
@@ -54,7 +54,7 @@ def run_policy(G: Graph, start: str, pi: Dict[str, str], max_steps: int) -> Tupl
     for _ in range(max_steps):
         if G.nodes[cur_state].is_terminal:
             break
-        
+
         tgt_state = pi[cur_state]
         p = random()
         for next_state, probability in G.get_edge(cur_state, tgt_state).probability:
@@ -69,3 +69,40 @@ def run_policy(G: Graph, start: str, pi: Dict[str, str], max_steps: int) -> Tupl
         cur_state = tgt_state
 
     return states, rewards
+
+# Return [error, path]. Error is true if there was an error.
+def bfs(G: Graph, src: str, tgt: str) -> Tuple[bool, List[str]]:
+    if src == tgt:
+        return (False, [])
+
+    queue = [src]
+    came_from = {}
+    path_found = False
+
+    while len(queue) > 0 and not path_found:
+        cur = queue.pop(0)
+
+        for next in G.neighbors(cur):
+            if next == tgt:
+                came_from[tgt] = cur
+                path_found = True
+                break
+
+            if next in came_from:
+                continue
+
+            came_from[next] = cur
+            queue.append(next)
+
+    if not path_found:
+        return (False, [])
+
+    path = []
+    cur = tgt
+    while cur != src:
+        path.append(cur)
+        cur = came_from[cur]
+
+    path.append(src)
+
+    return (True, path)
