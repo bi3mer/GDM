@@ -1,6 +1,7 @@
 from typing import Dict, List, Tuple
 from random import choice, random
 from math import inf
+from typing import Optional
 
 from .Graph import Graph
 
@@ -71,9 +72,9 @@ def run_policy(G: Graph, start: str, pi: Dict[str, str], max_steps: int) -> Tupl
     return states, rewards
 
 # Return [error, path]. Error is true if there was an error.
-def bfs(G: Graph, src: str, tgt: str) -> Tuple[bool, List[str]]:
+def bfs(G: Graph, src: str, tgt: str) -> Optional[List[str]]:
     if src == tgt:
-        return (False, [])
+        return []
 
     queue = [src]
     came_from = {}
@@ -101,8 +102,7 @@ def bfs(G: Graph, src: str, tgt: str) -> Tuple[bool, List[str]]:
             path.append(cur)
             cur = came_from[cur]
 
-        return (False, path)
+        return path
 
-    print('here')
-    return (True, [])
+    return None
 
